@@ -1,38 +1,149 @@
+@import url("./components/css/index.css");
+
+body, html {
+  margin: 0px;
+  padding: 0px;
+  color: var(--dark-blue);
+}
+
 .App {
-  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app-body {
+  width: 100%;
+  height: auto;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  padding: 20px 40px;
+  padding-left: 180px;
+}
+
+.body-header {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-self: stretch;
+  height: fit-content;
+  white-space: nowrap;
 }
 
-.App-link {
-  color: #61dafb;
+.body-header h1{
+  margin: 0;
+  height: fit-content;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.list-item {
+  width: 100% !important;
+  border-radius: 0px !important;
 }
+.list-item button {
+  background-color: white;
+  padding:10px;
+  width: 100%;
+}
+
+th {
+  text-align: start;
+  border-bottom: 1px solid var(--grey3);
+}
+
+tr > * {
+  padding: 10px 0px;
+  vertical-align: baseline;
+}
+
+table {
+  background-color: white;
+  border-radius: 10px;
+  padding: 0px 10px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-self: center;
+  padding-top: 30vh;
+  width: auto;
+}
+
+.table-info {
+  width: 100%;
+  table-layout: auto;
+}
+
+.table-info-family {
+  padding-bottom: 10px;
+}
+
+.table-info th {
+  border: none;
+  width: 1px;
+  font-size: 12px;
+}
+
+.table-info td {
+  padding-left: 20px;
+}
+
+.several-pages-body {
+  background-color:var(--grey1);
+  border-radius: 0px 10px 10px 10px;
+  height:auto; 
+  margin-bottom: 40px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  justify-self:stretch;
+  padding:20px
+}
+
+.rrr {
+  align-self: flex-end;
+}
+
+.table-body-div {
+  background-color: white;
+  border-radius: 10px;
+  width: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.table-body-div .custom-input-div {
+  width: auto;
+  max-width: 500px;
+  padding: 0px;
+}
+
+.table-info-family :last-child > td {
+  padding: 0px;
+  display: flexbox;
+  width: auto;
+  justify-items: end;
+}
+
+svg.small {
+  stroke-width: 3px;
+}
+
+svg.big {
+  stroke-width: 2px;
+}
+
+.dropdown-icon-closed {
+  transform: rotate(180deg)
+}
+
+.dropdown-icon-opened {
+  transform: rotate(-90deg)
+}
+

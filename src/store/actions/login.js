@@ -20,6 +20,7 @@ export async function login (context, logInData,) {
 		.then((res) => {
 			isResponseOk(res)
 			context.setUser(res.data.id)
+			userInfo()
 		})
 	} catch (error) {
 		throw error

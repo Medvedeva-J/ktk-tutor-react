@@ -1,6 +1,6 @@
 import CustomButton from "./customButton"
 import router from "../AppRoutes"
-import { getCsrf, logout } from "../store/actions"
+import { logout } from "../store/actions"
 import { useContext } from "react"
 import { UserContext } from "../App"
 
@@ -16,7 +16,6 @@ export default function SideBar() {
             </div>
             <CustomButton text="Выйти" onClick={() => {logout().then(async (res) => {
                 context.setUser(null)
-                const csrf = await getCsrf()
             })}} className='transparent'></CustomButton>
         </div>
     )

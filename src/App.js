@@ -30,6 +30,7 @@ function App() {
               return
           } else {
             setUser(null)
+            router.navigate('/login')
             return
           }
       })

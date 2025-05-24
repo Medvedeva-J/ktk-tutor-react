@@ -21,17 +21,6 @@ function App() {
         getSession()
     }, [])
 
-    const getCsrf = () => {
-      axios.get(baseUrl + 'csrf/', { withCredentials: true })
-      .then(async (res) => {
-          isResponseOk(res)
-
-          const csrfToken = res.headers.get('X-CSRFToken')
-          setCsrf(csrfToken)
-      })
-      .catch((err) => console.error(err))
-  }
-
     const getSession = () => {
       axios.get(baseUrl + "session/", { withCredentials: true })
       .then((res) => {

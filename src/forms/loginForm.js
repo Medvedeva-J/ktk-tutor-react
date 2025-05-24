@@ -28,6 +28,8 @@ const login = (loginData) => {
   })
   .then((res) => {
     isResponseOk(res)
+    context.setUser(res.data.id)
+    router.navigate("/students")
   })
   .catch((err) => {
     console.error(err);

@@ -28,7 +28,6 @@ const login = (loginData) => {
   })
   .then((res) => {
     isResponseOk(res)
-    userInfo()
   })
   .catch((err) => {
     console.error(err);

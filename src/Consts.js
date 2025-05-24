@@ -8,8 +8,8 @@ const personalInfo = ["Фамилия", "Имя", "Отчество",
 
 const monthsGenitiveCase = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 
-// const baseUrl = "http://localhost:8000/" 
-const baseUrl = "https://ktktutor.pythonanywhere.com/"
+const baseUrl = "http://localhost:8000/" 
+// const baseUrl = "https://ktktutor.pythonanywhere.com/"
 
 const studentDataFormFields = {
     name: {

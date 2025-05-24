@@ -14,7 +14,6 @@ export const UserContext = React.createContext()
 
 function App() {
   const [user, setUser] = useState(null);
-  const [csrf, setCsrf] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -29,6 +28,9 @@ function App() {
           if (res.data.isAuthenticated) {
               setUser(res.data.user_id)
               return
+          } else {
+            setUser(null)
+            return
           }
       })
       .catch(err => console.error(err))
@@ -46,7 +48,7 @@ function App() {
       </div>
     ) : (
     <UserContext.Provider value={{ 
-        user: user, setUser: setUser, csrf:csrf, setCsrf:setCsrf}}>
+        user: user, setUser: setUser}}>
           <RouterProvider router={router}/>
       </UserContext.Provider>
     )

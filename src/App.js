@@ -17,51 +17,50 @@ function App() {
   const [csrf, setCsrf] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // useEffect(() => {
-  //       getSession()
-  //   }, [])
+  useEffect(() => {
+        getSession()
+    }, [])
 
-  //   const getCsrf = () => {
-  //     axios.get(baseUrl + 'csrf/', { withCredentials: true })
-  //     .then(async (res) => {
-  //         isResponseOk(res)
+    const getCsrf = () => {
+      axios.get(baseUrl + 'csrf/', { withCredentials: true })
+      .then(async (res) => {
+          isResponseOk(res)
 
-  //         const csrfToken = res.headers.get('X-CSRFToken')
-  //         setCsrf(csrfToken)
-  //     })
-  //     .catch((err) => console.error(err))
-  // }
+          const csrfToken = res.headers.get('X-CSRFToken')
+          setCsrf(csrfToken)
+      })
+      .catch((err) => console.error(err))
+  }
 
-  //   const getSession = () => {
-  //     axios.get(baseUrl + "session/", { withCredentials: true })
-  //     .then((res) => {
-  //       setLoading(false)
-  //         if (res.data.isAuthenticated) {
-  //             setUser(res.data.user_id)
-  //             return
-  //         }
-  //         getCsrf()
-  //     })
-  //     .catch(err => console.error(err))
-  //   }
+    const getSession = () => {
+      axios.get(baseUrl + "session/", { withCredentials: true })
+      .then((res) => {
+        setLoading(false)
+          if (res.data.isAuthenticated) {
+              setUser(res.data.user_id)
+              return
+          }
+          getCsrf()
+      })
+      .catch(err => console.error(err))
+    }
 
 
   return (
-    <div>MEOW</div>
-    // loading ? (
-    //   <div
-    //   style={{justifyContent:"center", position:"absolute", margin:"auto", display:"flex", flexDirection:"column", alignItems:"center",
-    //     top:"0", bottom:"0", right:"0", left:"0"
-    //   }}>
-    //     <Icons name="loading" className='rotate'/>
-    //     <p>Загрузка</p>
-    //   </div>
-    // ) : (
-    // <UserContext.Provider value={{ 
-    //     user: user, setUser: setUser, csrf:csrf, setCsrf:setCsrf}}>
-    //       <RouterProvider router={router}/>
-    //   </UserContext.Provider>
-    // )
+    loading ? (
+      <div
+      style={{justifyContent:"center", position:"absolute", margin:"auto", display:"flex", flexDirection:"column", alignItems:"center",
+        top:"0", bottom:"0", right:"0", left:"0"
+      }}>
+        <Icons name="loading" className='rotate'/>
+        <p>Загрузка</p>
+      </div>
+    ) : (
+    <UserContext.Provider value={{ 
+        user: user, setUser: setUser, csrf:csrf, setCsrf:setCsrf}}>
+          <RouterProvider router={router}/>
+      </UserContext.Provider>
+    )
   );
 }
 

@@ -40,7 +40,6 @@ function App() {
               setUser(res.data.user_id)
               return
           }
-          getCsrf()
       })
       .catch(err => console.error(err))
     }

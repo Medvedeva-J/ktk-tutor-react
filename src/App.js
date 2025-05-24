@@ -14,28 +14,80 @@ export const UserContext = React.createContext()
 
 function App() {
   const [user, setUser] = useState(null);
+  const [csrf, setCsrf] = useState(null);
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-        getSession()
-    }, [])
+    getSession()
+}, [])
 
-    const getSession = () => {
-      axios.get(baseUrl + "session/", { withCredentials: true })
-      .then((res) => {
-        setLoading(false)
-        console.log(res)
-          if (res.data.isAuthenticated) {
-              setUser(res.data.user_id)
-              return
-          } else {
-            setUser(null)
-            router.navigate('/login')
-            return
-          }
-      })
-      .catch(err => console.error(err))
+const isResponseOk = (res) => {
+  if (!(res.status >= 200 && res.status <= 299)) {
+    throw Error(res.statusText);
+  }
+}
+
+const getCSRF = () => {
+    axios.get(baseUrl + 'csrf/', { withCredentials: true })
+    .then((res) => {
+        isResponseOk(res)
+
+        const csrfToken = res.headers.get('X-CSRFToken')
+        setCsrf(csrfToken)
+    })
+    .catch((err) => console.error(err))
+}
+
+const getSession = () => {
+  axios.get(baseUrl + "session/", { withCredentials: true })
+  .then((res) => {
+      if (res.data.isAuthenticated) {
+          setUser(res.data.user_id)
+          return
+      } else {
+        router.navigate('/students')
+      }
+      getCSRF()
+  })
+  .catch(err => console.error(err))
+}
+
+// Полученный CSRF-токен пихаем в заголовок и отправляем серверу
+const login = (loginData) => {
+  const data = { username: loginData.email, password: loginData.password }
+  axios.post(baseUrl + "login/", data, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrf,
     }
+  })
+  .then((res) => {
+    isResponseOk(res)
+    
+    userInfo()
+  })
+  .catch((err) => {
+    console.error(err);
+    setIsError("Неверные данные")
+  });
+}
+
+const userInfo = () => {
+  axios.get(baseUrl + "user_info/", {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then((res) => {
+    console.log("Вы авторизованы как: " + res.data.id);
+    setUser(res.data.id)
+  })
+  .catch((err) => {
+      if (err.status === 401) console.log(err.error);
+  });
+}
 
 
   return (

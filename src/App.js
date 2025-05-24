@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     context.getSession().then((res) => setLoading(false))
-}, [context.user])
+}, [])
 
   return (
     loading ? (

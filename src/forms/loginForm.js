@@ -6,47 +6,37 @@ import { useFieldChange } from "../hooks/useFieldChange";
 import { isResponseOk } from "../layouts/auth/useLogin";
 import { baseUrl } from "../Consts";
 import axios from "axios";
-import { login } from "../store/actions";
 import { UserContext } from "../App";
+import { useAppContext } from "../contexts/AppContext/AppContextProvider";
 
 export default function LoginForm(props) {
-  const context = useContext(UserContext)
+  const context = useAppContext()
 
   const [error, setError] = useState(null)
   const [logInData, setLogInData] = useState({email: "", password: ""})
 
-  const login = (context, logInData) => {
-    const data = { email: logInData.email, password: logInData.password }
-    axios.post(baseUrl + "login/", data, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": context.csrf,
-      }
-    })
-    .then((res) => {
-      isResponseOk(res)
-      userInfo(context)
-      router.navigate("/students")
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-        const res = login(context, logInData); 
-        context.setUser (res.data.id); 
-        router.navigate("/students"); 
-    } catch (e) {
-        const err = e.response ? e.response.data.detail : "Произошла ошибка"; 
-        setError(err);
+  // Полученный CSRF-токен пихаем в заголовок и отправляем серверу
+const login = (loginData) => {
+  console.log(logInData)
+  const data = { email: loginData.email, password: loginData.password }
+  axios.post(baseUrl + "login/", data, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": context.csrf,
     }
+  })
+  .then((res) => {
+    isResponseOk(res)
+    userInfo()
+  })
+  .catch((err) => {
+    console.error(err);
+    console.log("Неверные данные")
+  });
 }
 
-const userInfo = (context) => {
+const userInfo = () => {
   axios.get(baseUrl + "user_info/", {
     withCredentials: true,
     headers: {
@@ -54,16 +44,24 @@ const userInfo = (context) => {
     },
   })
   .then((res) => {
-    console.log("Вы авторизованы как: " + res.data.username);
+    console.log("Вы авторизованы как: " + res.data.id);
     context.setUser(res.data.id)
+    router.navigate("/students")
   })
   .catch((err) => {
       if (err.status === 401) console.log(err.error);
   });
 }
 
-
-
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+        const res = login(logInData); 
+    } catch (e) {
+        const err = e.response ? e.response.data.detail : "Произошла ошибка"; 
+        setError(err);
+    }
+}
 
   const handleChange = useFieldChange(setLogInData)
 

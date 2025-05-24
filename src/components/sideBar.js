@@ -1,11 +1,10 @@
 import CustomButton from "./customButton"
 import router from "../AppRoutes"
-import { logout } from "../store/actions"
-import { useContext } from "react"
-import { UserContext } from "../App"
+
+import { useAppContext } from "../contexts/AppContext/AppContextProvider"
 
 export default function SideBar() {
-    const context = useContext(UserContext)
+    const context = useAppContext()
     return ( 
         <div className="sidenav shadow">
             <CustomButton text="Личный кабинет" onClick={() => router.navigate("/profile", {replace:false})} className='transparent'></CustomButton>
@@ -14,9 +13,7 @@ export default function SideBar() {
                 <CustomButton text="Документы" onClick={() => router.navigate("/documents", {replace:false})} className='transparent'></CustomButton>
                 <CustomButton text="Календарь" onClick={() => router.navigate("/calendar", {replace:false})} className='transparent'></CustomButton>
             </div>
-            <CustomButton text="Выйти" onClick={() => {logout().then(async (res) => {
-                context.setUser(null)
-            })}} className='transparent'></CustomButton>
+            <CustomButton text="Выйти" onClick={context.logout} className='transparent'></CustomButton>
         </div>
     )
 }

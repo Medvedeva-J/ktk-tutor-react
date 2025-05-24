@@ -184,7 +184,7 @@ const createPdf = (data) => {
 
 const fetchGroups = async (user) => {
     try{
-        await fetch(`${baseUrl}groups/${user}`)
+        return await fetch(`${baseUrl}groups/${user}`)
             .then(response => {
             return response.json()
             })

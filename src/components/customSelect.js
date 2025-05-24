@@ -1,7 +1,7 @@
 export default function CustomSelect(props) {
     return (
         <select 
-        onChange={e => props.onChange(e.target.value)}
+        onChange={props.onChange}
         value={props.value}
         name={props.name} {...props}>
             {Object.keys(props.values).map(item => (

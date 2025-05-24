@@ -9,13 +9,13 @@ import CustomSelect from '../components/customSelect';
 import { useFieldChange } from '../hooks/useFieldChange';
 import Icons from '../icons/icons';
 import SelectWithInput from '../components/SelectWithInput';
-import { UserContext } from '../App';
-import { useContext } from 'react';
+
+import { useAppContext } from '../contexts/AppContext/AppContextProvider';
 
 
 
 export function Calendar(props) {
-    const context = useContext(UserContext);
+    const context = useAppContext()
     const useC = useCalendar(props.date ?? new Date(), props.locale | "default")
 
     const targetRef = useRef(null);
@@ -47,9 +47,9 @@ export function Calendar(props) {
                 return result
             })
         }
-        getEmptyEvent()
         setupGroups()
-        setupEvents();
+        setupEvents()
+        getEmptyEvent()
     }, [])
 
     useEffect(() => {
@@ -263,11 +263,10 @@ function ModalContent(props) {
                         values={props.formFields[item].values}
                         placeholder={props.eventData.verbose[`${item}_verbose`]}
                         type={props.formFields[item].type}
-                        name={item} 
                         selected={item}
                         id={item} 
                         value={props.eventData[item]}
-                        onChange={props.handleChange(item)}/> 
+                        onChange={(e) => {props.handleChange(item)(e.target.value)}}/> 
                     ) : (
                     props.formFields[item].type == "input-select"? (
                         props.eventData.event_type == "IND" ?

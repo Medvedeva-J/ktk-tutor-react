@@ -5,7 +5,7 @@ import {StudentProfile} from "./studentProfile/studentProfile";
 import CustomButton from '../components/customButton';
 import { fetchGroups, fetchMajor, fetchStudents } from "../api/api";
 import router from "../AppRoutes";
-import { UserContext } from "../App";
+import { useAppContext } from "../contexts/AppContext/AppContextProvider";
 
 export default function Students() {
     return (
@@ -18,7 +18,7 @@ export default function Students() {
 }
 
 function StudentsList() {
-    const context = useContext(UserContext)
+    const context = useAppContext()
     
     const [students, setStudents] = useState([])
     const [groups, setGroups] = useState([])
@@ -26,16 +26,16 @@ function StudentsList() {
     const [majorName, setMajorName] = useState(null)
 
     async function setupGroups(){
-        const groups = await fetchGroups(context.user);
-        setGroups(groups)
-        const group = groups[0]? groups[0] : null
+        const grouplist = await fetchGroups(context.user);
+        setGroups(grouplist)
+        const group = grouplist[0]
         setSelectedGroup(group)
         let major = group? await fetchMajor(group.major) : null
         setMajorName(major?.name)
     }
     
     async function setupStudents(group){
-        const students = group ? await fetchStudents({"group": group.id}): null;
+        const students = group ? await fetchStudents({"group": group.id}): [];
         setStudents(
             students
         );
@@ -61,7 +61,7 @@ function StudentsList() {
         <div className="app-body">
             <h1 className="header1" style={{whiteSpace:"nowrap"}}>Мои студенты</h1>
 
-            { groups.length > 0 ?
+            { groups?.length > 0 ?
                 (<div style={{display:"flex", flexDirection:"column", height:"100%", width:"auto"}}>
                     
                     <CustomToggleGroup value={selectedGroup.id} data={groups} exclusive onChange={handleChange}/>
@@ -71,13 +71,16 @@ function StudentsList() {
                             <h3 style={{margin:"0", whiteSpace:"nowrap"}} className="body5">{majorName}</h3>
                         </div>
 
-                        <div className="body5" style={{width:"100%", backgroundColor:"var(--grey2)", display:"flex",
-                            gap:"2px", flexDirection:"column", borderRadius:"10px", overflow:"clip"}}>
-                                {students.filter((student) => student.group == selectedGroup.id).map((student, i) => (
-                                    <CustomButton onClick={() => router.navigate(`/student/${student.id}`, {replace:false, data:student})} 
-                                    text={`${student.lastname} ${student.name} ${student.patronymic}`} className="list-item"/>
-                                ))}
-                        </div>
+                        { students.length > 0?
+                            <div className="body5" style={{width:"100%", backgroundColor:"var(--grey2)", display:"flex",
+                                gap:"2px", flexDirection:"column", borderRadius:"10px", overflow:"clip"}}>
+                                    {students.filter((student) => student.group == selectedGroup.id).map((student, i) => (
+                                        <CustomButton onClick={() => router.navigate(`/student/${student.id}`, {replace:false, data:student})} 
+                                        text={`${student.lastname} ${student.name} ${student.patronymic}`} className="list-item"/>
+                                    ))}
+                            </div> :
+                            <span className="body6 semi-transparent">В данной группе нет студентов</span>
+                        }
                     </div>
                 </div>)
                 

@@ -8,11 +8,11 @@ import { tutorFormFields } from "../Consts";
 import { putTutor } from "../api/api";
 import { Modal } from "../components/Modal";
 import { useFieldChange } from "../hooks/useFieldChange";
-import { UserContext } from "../App";
+import { useAppContext } from "../contexts/AppContext/AppContextProvider";
 
 export default function Profile() {
     const [tutorData, setTutorData] = useState(null)
-    const context = useContext(UserContext)
+    const context = useAppContext()
     const [isEdit, setIsEdit] = useState(false)
     const [errors, setErrors] = useState(null)
 

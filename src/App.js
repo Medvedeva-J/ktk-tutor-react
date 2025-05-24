@@ -25,6 +25,7 @@ function App() {
       axios.get(baseUrl + "session/", { withCredentials: true })
       .then((res) => {
         setLoading(false)
+        console.log(res)
           if (res.data.isAuthenticated) {
               setUser(res.data.user_id)
               return

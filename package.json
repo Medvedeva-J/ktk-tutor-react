@@ -19,7 +19,8 @@
     "ajv-keywords": "^5.1.0",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
-    "react-select": "^5.10.1"
+    "react-select": "^5.10.1",
+    "react-router-dom": "^7.6.0"
   },
   "scripts": {
     "start": "react-scripts start",

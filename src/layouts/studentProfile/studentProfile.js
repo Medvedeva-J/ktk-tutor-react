@@ -12,10 +12,8 @@ import router from "../../AppRoutes";
 import { useFieldChange } from "../../hooks/useFieldChange";
 import Icons from "../../icons/icons";
 import { Modal } from "../../components/Modal";
-import useGlobal from "../../store";
 
 function StudentProfile() {
-    const [globalState, globalActions] = useGlobal()
     const toggleData = [
         {   id: "about",
             name: "О студенте"

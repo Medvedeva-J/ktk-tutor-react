@@ -1,24 +1,25 @@
-import router from "../../AppRoutes";
+
 import { baseUrl } from "../../Consts";
 import axios from "axios";
 import { isResponseOk } from "../../layouts/auth/useLogin";
+import { getCsrf } from "./getCsrf";
 
-export async function login (store, logInData) {
+export async function login (context, logInData,) {
 	try {
+    console.log(context.csrf)
 		const data = { email: logInData.email, password: logInData.password }
-		await axios.post(baseUrl + "login/", data, {
-			withCredentials: true,
+		await fetch(baseUrl + "login/", {
+      method:"POST",
+			credentials: "include",
 			headers: {
 			"Content-Type": "application/json",
-			"X-CSRFToken": store.state.csrf,
-			}
+			"X-CSRFToken": context.csrf,
+			},
+      body:JSON.stringify(data)
 		})
 		.then((res) => {
 			isResponseOk(res)
-			userInfo()
-			store.setState({
-			user: res.data.id
-			})
+			context.setUser(res.data.id)
 		})
 	} catch (error) {
 		throw error

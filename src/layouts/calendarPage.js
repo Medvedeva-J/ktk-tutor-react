@@ -6,15 +6,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../components/Modal';
 import { deleteEvent, putEvent, postEvent, fetchEvents, fetchGroups, fetchStudents, getEmptyInstance } from '../api/api';
 import CustomSelect from '../components/customSelect';
-import useGlobal from '../store';
 import { useFieldChange } from '../hooks/useFieldChange';
 import Icons from '../icons/icons';
 import SelectWithInput from '../components/SelectWithInput';
+import { UserContext } from '../App';
+import { useContext } from 'react';
 
 
 
 export function Calendar(props) {
-    const [globalState, globalActions] = useGlobal()
+    const context = useContext(UserContext);
     const useC = useCalendar(props.date ?? new Date(), props.locale | "default")
 
     const targetRef = useRef(null);
@@ -60,7 +61,7 @@ export function Calendar(props) {
 
     async function setupGroups() {
         try {
-            await fetchGroups(globalState.user).then(result => {
+            await fetchGroups(context.user).then(result => {
                 let list = {}
                 result?.map(item => {
                     list[item.id] = {

@@ -1,27 +1,69 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomButton from "../components/customButton";
 import CustomInput from "../components/customInput";
-import useGlobal from "../store";
 import router from "../AppRoutes";
 import { useFieldChange } from "../hooks/useFieldChange";
+import { isResponseOk } from "../layouts/auth/useLogin";
+import { baseUrl } from "../Consts";
+import axios from "axios";
+import { login } from "../store/actions";
+import { UserContext } from "../App";
 
 export default function LoginForm(props) {
-  const [ globalState, globalActions ] = useGlobal();
+  const context = useContext(UserContext)
 
   const [error, setError] = useState(null)
   const [logInData, setLogInData] = useState({email: "", password: ""})
 
+  const login = (context, logInData) => {
+    const data = { email: logInData.email, password: logInData.password }
+    axios.post(baseUrl + "login/", data, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": context.csrf,
+      }
+    })
+    .then((res) => {
+      isResponseOk(res)
+      userInfo(context)
+      router.navigate("/students")
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
 
   async function handleSubmit(e) {
-      e.preventDefault()
-      try {
-        await globalActions.login(logInData)
-        router.navigate("/students")
-      } catch (e) {
-        const err = await e
-        setError(err.response.data.detail)
-      }
-  }
+    e.preventDefault();
+    try {
+        const res = login(context, logInData); 
+        context.setUser (res.data.id); 
+        router.navigate("/students"); 
+    } catch (e) {
+        const err = e.response ? e.response.data.detail : "Произошла ошибка"; 
+        setError(err);
+    }
+}
+
+const userInfo = (context) => {
+  axios.get(baseUrl + "user_info/", {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then((res) => {
+    console.log("Вы авторизованы как: " + res.data.username);
+    context.setUser(res.data.id)
+  })
+  .catch((err) => {
+      if (err.status === 401) console.log(err.error);
+  });
+}
+
+
+
 
   const handleChange = useFieldChange(setLogInData)
 

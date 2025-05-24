@@ -1,5 +1,4 @@
 import { baseUrl } from "../Consts"
-import useGlobal from "../store"
 
 const fetchTutor = (id) => {
   return fetch(`${baseUrl}tutor/${id}`)

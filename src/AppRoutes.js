@@ -4,9 +4,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { StudentProfile } from './layouts/studentProfile/studentProfile';
 import { Calendar } from './layouts/calendarPage';
 import Students from './layouts/students';
-import Documents, { CustomDocument, DocumentsList } from './layouts/documents';
+import { CustomDocument, DocumentsList } from './layouts/documents';
 import Profile from "./layouts/profile"
-import useGlobal from './store';
 
 const paths = [
   {path: '/login', element: <div style={{width:"auto", maxWidth:"400px", margin:"auto"}}><LoginForm/></div>},

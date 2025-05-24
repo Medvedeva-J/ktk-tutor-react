@@ -1,10 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../Consts";
 import axios from 'axios';
-import { useContext } from "react";
-import { UserContext } from "../../App";
-import router from '../../AppRoutes'
-import useGlobal from "../../store";
 
 
 const isResponseOk = (res) => {

@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import {UserContext} from '../App';
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import CustomInput from '../components/customInput';
 import CustomToggleGroup from '../components/customToggleGroup';
 import {StudentProfile} from "./studentProfile/studentProfile";
 import CustomButton from '../components/customButton';
-import { baseUrl } from '../Consts';
 import { fetchGroups, fetchMajor, fetchStudents } from "../api/api";
-import useGlobal from "../store";
 import router from "../AppRoutes";
+import { UserContext } from "../App";
 
 export default function Students() {
     return (
@@ -21,8 +18,7 @@ export default function Students() {
 }
 
 function StudentsList() {
-    const [globalState, globalActions] = useGlobal()
-
+    const context = useContext(UserContext)
     
     const [students, setStudents] = useState([])
     const [groups, setGroups] = useState([])
@@ -30,7 +26,7 @@ function StudentsList() {
     const [majorName, setMajorName] = useState(null)
 
     async function setupGroups(){
-        const groups = await fetchGroups(globalState.user);
+        const groups = await fetchGroups(context.user);
         setGroups(groups)
         const group = groups[0]? groups[0] : null
         setSelectedGroup(group)
@@ -46,10 +42,10 @@ function StudentsList() {
     }
 
     useEffect(() => {
-         if (globalState.user != null){
+         if (context.user != null){
             setupGroups();
         }
-    }, [globalState.user])
+    }, [context.user])
 
     useEffect(() => {
         setupStudents(selectedGroup)

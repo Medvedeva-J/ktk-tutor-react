@@ -1,11 +1,10 @@
 import React, { useEffect, useId, useState } from "react";
 import CustomButton from "../components/customButton";
-import useGlobal from "../store";
 import { useFieldChange } from "../hooks/useFieldChange";
 import DocumentFilterComponent from "../components/DocumentFilterComponent";
 import CustomMultiSelect from "../components/customMultiSelect";
 import { createPdf, fetchStudents } from "../api/api";
-import { baseUrl } from "../Consts";
+
 
 const statementFields = {
     name: {label: "Имя", value: "name"},
@@ -30,8 +29,7 @@ export default function CustomDocumentForm(props) {
         disability_group: {label: "Группа инвалидности", value: "disability_group"},
         disability_category: {label: "Категория инвалидности", value: "disability_category"},
     }
-    
-    const [ globalState, globalActions ] = useGlobal();
+
     const [filtersData, setFiltersData] = useState({})
     const [children,setChildren] = useState([]);
     const [nextId,setnextId] = useState(0);

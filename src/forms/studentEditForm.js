@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import CustomButton from "../components/customButton";
 import CustomInput from "../components/customInput";
-import useGlobal from "../store";
 import { useFieldChange } from "../hooks/useFieldChange";
 import { putStudent } from "../api/api";
 
 export default function StudentEditForm(props) {
-  const [ globalState, globalActions ] = useGlobal();
 
   const [isError, setIsError] = useState(false)
   const [studentData, setStudentData] = useState(props.studentData)

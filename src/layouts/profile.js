@@ -3,34 +3,34 @@ import CustomInput from "../components/customInput";
 import { fetchTutor } from "../api/api";
 import { format } from "date-fns";
 import CustomSelect from "../components/customSelect";
-import { useEffect, useState } from "react";
-import useGlobal from "../store";
+import { useContext, useEffect, useState } from "react";
 import { tutorFormFields } from "../Consts";
 import { putTutor } from "../api/api";
 import { Modal } from "../components/Modal";
 import { useFieldChange } from "../hooks/useFieldChange";
+import { UserContext } from "../App";
 
 export default function Profile() {
     const [tutorData, setTutorData] = useState(null)
-    const [globalState, globalActions] = useGlobal()
+    const context = useContext(UserContext)
     const [isEdit, setIsEdit] = useState(false)
     const [errors, setErrors] = useState(null)
 
     const handleChange = useFieldChange(setTutorData)
 
     useEffect(() => {
-        if (globalState.user != null) {
+        if (context.user != null) {
             async function setupTutor(){
-                const tutor = await fetchTutor(globalState.user);
+                const tutor = await fetchTutor(context.user);
                 setTutorData(tutor)
             }
             setupTutor()
         }
-        }, [globalState.user])
+        }, [context.user])
 
     const submitForm = async() => {
         try {
-            putTutor(tutorData, globalState.user)
+            putTutor(tutorData, context.user)
             setIsEdit(false)
         } catch (errors) {
             console.log(errors)

@@ -15,9 +15,8 @@ export default function LoginForm(props) {
   const [error, setError] = useState(null)
   const [logInData, setLogInData] = useState({email: "", password: ""})
 
-  // Полученный CSRF-токен пихаем в заголовок и отправляем серверу
-const login = (loginData) => {
-  console.log(logInData)
+
+  const login = (loginData) => {
   const data = { email: loginData.email, password: loginData.password }
   axios.post(baseUrl + "login/", data, {
     withCredentials: true,

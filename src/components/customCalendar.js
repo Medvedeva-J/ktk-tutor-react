@@ -5,6 +5,7 @@ import "../components/Components.css"
 import React, { useState } from "react"
 import Icons from "../icons/icons.js"
 import CustomButton from "./customButton.js"
+import { format } from "date-fns"
 
 function CustomCalendar(props) {
     const useC = props.useC
@@ -29,14 +30,19 @@ function CustomCalendar(props) {
 
             <div ref={props.ref} className="calendar-body">
                 {useC.calendarDays.map((day, i) => (
-                    <div onClick={() => useC.handleClick(day.date)}
+                    <div onClick={() => {
+                        useC.handleClick(day.date)
+                        props.setEventData({...props.emptyEvent, date: format(day.date, "yyyy-MM-dd")})
+                    }}
                     className={"calendar-tile " + (
-                        day.monthIndex != useC.selectedMonth.monthIndex ? "tile-secondary" : "")}>
+                        day.monthIndex != useC.selectedMonth.monthIndex ? "tile-secondary" : "") + (
+                            useC.selectedDay.date == day.date ? "selected-day-tile" : "")}>
                         <span className="body6">{day.day}</span>
 
                         <div className="tile-events-div">
                             {events.filter((event, i) => datesAreEqual(event.date, day.date)).map((event, i) => (
-                                <div className="tile-event-item body6" onClick={() => {
+                                <div className="tile-event-item body6" onClick={(e) => {
+                                    e.stopPropagation()
                                     props.setEventData(event)
                                     props.setModalIsOpen(true)
                                 }}>

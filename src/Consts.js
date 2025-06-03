@@ -51,6 +51,10 @@ const studentDataFormFields = {
         type:"text",
         max_length: 20
         },
+    age: {
+        type: "text",
+        max_length: 2
+    }
 }
 
 const healthFormFields = {
@@ -79,6 +83,8 @@ const healthFormFields = {
         type:"checkbox"
         },
 }
+
+const docTitle = "Состав академической группы"
 
 const familyDataFields = {
     relation: {
@@ -144,5 +150,6 @@ export {
     healthFormFields,
     tutorFormFields,
     familyDataFields,
-    eventFormFields
+    eventFormFields,
+    docTitle
 }

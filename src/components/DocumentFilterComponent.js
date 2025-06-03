@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import CustomSelect from "./customSelect"
 import CustomInput from "./customInput"
 import { useFieldChange } from "../hooks/useFieldChange"
+import { studentDataFormFields } from "../Consts"
 
 const statements = {
     exact: {label: "равно", value: "exact"},
@@ -17,14 +18,16 @@ export default function DocumentFilterComponent (props) {
     const [value, setValue] = useState({
         "field": Object.keys(props.fields)[0],
         "statement": Object.keys(statements)[0],
-        "compare-to": ""
+        "compare_to": ""
     })
 
     const handleChange = useFieldChange(setValue)
-
-    var fieldSelector = <CustomSelect id="field" name="field" onChange={handleChange('field')} values={props.fields}/>
-    const statementSelector = <CustomSelect id="statement" name="statement" onChange={handleChange('statement')} values={statements}/>
-    const compareToInput = <CustomInput id="compare-to" name="compare-to" onChange={handleChange('compare-to')} value={value["compare-to"]} hint="Значение" ></CustomInput>
+    var fieldSelector = <CustomSelect id="field" name="field" onChange={(e) => {handleChange('field')(e.target.value)}} values={props.fields}/>
+    const statementSelector = <CustomSelect id="statement" name="statement" onChange={(e) => {handleChange('statement')(e.target.value)}} values={statements}/>
+    const compareToInput = studentDataFormFields[value.field].type == "select" ?
+        <CustomSelect id="compare_to" name="compare_to" values={studentDataFormFields[value.field].values}
+            onChange={(e) => {handleChange('compare_to')(e.target.value)}}/>:
+        <CustomInput id="compare_to" name="compare_to" onChange={(e) => {handleChange('compare_to')(e)}} value={value["compare_to"]} hint="Значение" ></CustomInput>
 
     return (<div onChange={props.onChange(value)} className="document-filter-component-body">
                 <div style={{display:"flex", alignItems:"center", gap:"20px"}}>

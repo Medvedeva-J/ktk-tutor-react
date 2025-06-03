@@ -51,6 +51,8 @@
     display: flex;
     gap: 5px;
     align-content: center;
+    padding: 5px 0px;
+    border-bottom: solid 1px var(--grey1);
 }
 
 .multiselect-options-container {

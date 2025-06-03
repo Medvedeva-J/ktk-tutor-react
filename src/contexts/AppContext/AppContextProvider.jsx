@@ -3,6 +3,7 @@ import { useState } from "react";
 import { baseUrl } from "../../Consts";
 import router from "../../AppRoutes";
 import axios from "axios";
+import { fetchGroups, fetchTutor } from "../../api/api";
 
 
 const Context = React.createContext(null);
@@ -19,14 +20,16 @@ export const AppContextProvider = ({ children, ...props }) => {
 
   export const useCreateAppContext = function(props) {
     const [user, setUser] = useState(props.user || null);
+    const [userObject, setUserObject] = useState(props.userObject || null);
     const [csrf, setCsrf] = useState(props.csrf || null);
+    const [groups, setGroups] = useState(props.groups || null);
     
     const isResponseOk = (res) => {
         if (!(res.status >= 200 && res.status <= 299)) {
           throw Error(res.statusText);
         }
       }
-      
+
       const getCSRF = () => {
           axios.get(baseUrl + 'csrf/', { withCredentials: true })
           .then((res) => {
@@ -42,7 +45,12 @@ export const AppContextProvider = ({ children, ...props }) => {
         return await axios.get(baseUrl + "session/", { withCredentials: true })
         .then(async (res) => {
             if (res.data.isAuthenticated) {
-                setUser(res.data.user_id)
+              const userData = {...await fetchTutor(res.data.user_id), ...res.data}
+
+              setUser(res.data.user_id)
+              setUserObject(await fetchTutor(res.data.user_id))
+              setGroups(await fetchGroups(res.data.user_id))
+                
             } else {
               router.navigate('/login')
             }
@@ -57,6 +65,7 @@ export const AppContextProvider = ({ children, ...props }) => {
         .then((res) => {
           isResponseOk(res)
           setUser(null)
+          router.navigate('/login')
           getCSRF();
         })
         .catch(err => console.error(err));
@@ -65,8 +74,12 @@ export const AppContextProvider = ({ children, ...props }) => {
     return {
       user,
       setUser,
+      userObject,
+      setUserObject,
       csrf, 
       setCsrf,
+      groups,
+      setGroups,
       getSession,
       isResponseOk,
       getCSRF,

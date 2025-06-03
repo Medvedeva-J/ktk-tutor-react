@@ -4,20 +4,21 @@ import { eventFormFields, monthsGenitiveCase } from '../Consts'
 import CustomButton from '../components/customButton'
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../components/Modal';
-import { deleteEvent, putEvent, postEvent, fetchEvents, fetchGroups, fetchStudents, getEmptyInstance } from '../api/api';
+import { deleteEvent, putEvent, postEvent, fetchEvents, fetchGroups, fetchStudents, getEmptyInstance, createEventsPdf, fetchFilteredEvents } from '../api/api';
 import CustomSelect from '../components/customSelect';
 import { useFieldChange } from '../hooks/useFieldChange';
 import Icons from '../icons/icons';
 import SelectWithInput from '../components/SelectWithInput';
 
 import { useAppContext } from '../contexts/AppContext/AppContextProvider';
+import { format } from 'date-fns';
 
 
 
 export function Calendar(props) {
     const context = useAppContext()
     const useC = useCalendar(props.date ?? new Date(), props.locale | "default")
-
+    const [selectedDay, setSelectedDay] = useState(props.date ?? new Date())
     const targetRef = useRef(null);
     const elementRef = useRef(null);
 
@@ -29,8 +30,8 @@ export function Calendar(props) {
     const [filters, setFilters] = useState({
         from: null,
         until: null,
-        type: null,
-        group: null
+        type: "all",
+        group: "all"
     })
 
     const handleChange = useFieldChange(setEventData)
@@ -98,14 +99,39 @@ export function Calendar(props) {
         )
     }
 
+    useEffect(() => {
+        setupEvents()
+    }, [useC.selectedMonth])
+
     const closeModal = () => {
         setEventData(emptyEvent)
         setModalIsOpen(false)
         setErrors(null)
     }
 
-    const submitEventFilters = () => {
-        console.log(filters)
+    const submitEventFilters = async () => {
+        const finalFilters = []
+        
+        if (filters.group != "all") {
+            finalFilters.push({field: "group", statement: "exact", compare_to:filters.group})
+        }
+        if (filters.type != "all") {
+            finalFilters.push({field: "event_type", statement: "exact", compare_to:filters.type})
+        }
+        if (filters.until != null && filters.until != "") {
+            finalFilters.push({field: "date", statement: "lt", compare_to:filters.until})
+        }
+        if (filters.from != null && filters.from != "") {
+            finalFilters.push({field: "date", statement: "gt", compare_to:filters.from})
+        }
+
+        const user = `${context.userObject.lastname} ${context.userObject.name[0]}. ${context.userObject.patronymic[0]}.`
+        const a = fetchFilteredEvents({filters: finalFilters}).then(res => {
+            createEventsPdf(res, user).then(blob => {
+                const url = URL.createObjectURL(blob);
+                window.open(url);
+              });
+        })
     }
 
     const submitForm = async (isDel) => {
@@ -140,8 +166,8 @@ export function Calendar(props) {
 
   return (
     <div className="app-body" id="calendar">
-        <div style={{display:"flex", flexGrow:"1", gap:"40px", boxSizing:"border-box", height:"auto"}}>
-            <CustomCalendar ref={targetRef} setModalIsOpen={setModalIsOpen} setEventData={setEventData} events={events} useC={useC}/>
+        <div style={{display:"flex", flexGrow:"1", gap:"40px", boxSizing:"border-box", height:"fit-content"}}>
+            <CustomCalendar emptyEvent={emptyEvent} ref={targetRef} callback={setSelectedDay} setModalIsOpen={setModalIsOpen} setEventData={setEventData} events={events} useC={useC}/>
 
             <div ref={elementRef} className='calendar-side-menu'>
                 <div className='selected-day-menu shadow'>
@@ -186,11 +212,11 @@ export function Calendar(props) {
                         <div>
                             Группа 
                             <CustomSelect
-                                style={{flexGrow:"1"}} values={{"null":{label:"Все"}, ...formFields.group.values}}
+                                style={{flexGrow:"1"}} values={{"all":{label:"Все"}, ...formFields.group.values}}
                                     name="group" 
                                     selected={filters.group}
                                     id={"group"} 
-                                    value={formFields.group.values[0]}
+                                    value={filters.group}
                                 onChange={(e) => {handleFiltersChange("group")(e.target.value)}} />
                         </div>
 

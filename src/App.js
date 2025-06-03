@@ -14,7 +14,10 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    context.getSession().then((res) => setLoading(false))
+    const preGame = async() => {
+      await context.getSession().then((res) => setLoading(false))
+    }
+    preGame()
 }, [])
 
   return (

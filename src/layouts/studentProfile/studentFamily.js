@@ -67,8 +67,8 @@ function StudentFamily(props) {
 
                                                 <CustomSelect
                                                 values={familyDataFields[item].values}
-                                                onChange={(value)=>{
-                                                    handleChange(data.indexOf(member), value, item)}}
+                                                onChange={(e)=>{
+                                                    handleChange(data.indexOf(member), e.target.value, item)}}
                                                 placeholder={member.verbose[`${item}_verbose`]}
                                                 type={familyDataFields[item].type}
                                                 name={item} 

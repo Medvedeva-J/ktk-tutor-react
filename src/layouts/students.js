@@ -21,16 +21,11 @@ function StudentsList() {
     const context = useAppContext()
     
     const [students, setStudents] = useState([])
-    const [groups, setGroups] = useState([])
-    const [selectedGroup, setSelectedGroup] = useState("")
+    const [selectedGroup, setSelectedGroup] = useState(context.groups[0] || null)
     const [majorName, setMajorName] = useState(null)
 
     async function setupGroups(){
-        const grouplist = await fetchGroups(context.user);
-        setGroups(grouplist)
-        const group = grouplist[0]
-        setSelectedGroup(group)
-        let major = group? await fetchMajor(group.major) : null
+        let major = selectedGroup? await fetchMajor(selectedGroup.major) : null
         setMajorName(major?.name)
     }
     
@@ -53,7 +48,7 @@ function StudentsList() {
 
     const handleChange = (event, newValue) => {
         if (newValue != null) {
-            setSelectedGroup(groups.filter((item) => item.id == newValue)[0])
+            setSelectedGroup(context.groups.filter((item) => item.id == newValue)[0])
         }
     }
 
@@ -61,10 +56,10 @@ function StudentsList() {
         <div className="app-body">
             <h1 className="header1" style={{whiteSpace:"nowrap"}}>Мои студенты</h1>
 
-            { groups?.length > 0 ?
+            { context.groups?.length > 0 ?
                 (<div style={{display:"flex", flexDirection:"column", height:"100%", width:"auto"}}>
                     
-                    <CustomToggleGroup value={selectedGroup.id} data={groups} exclusive onChange={handleChange}/>
+                    <CustomToggleGroup value={selectedGroup.id} data={context.groups} exclusive onChange={handleChange}/>
                     <div className="several-pages-body">
                         <div style={{display:"flex", gap:"20px", justifyContent:"space-between", alignItems:"baseline"}}>
                             <h2 style={{margin:"0"}} className="body2">{selectedGroup.name}</h2>

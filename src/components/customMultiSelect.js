@@ -70,7 +70,7 @@ function CustomMultiSelect(props) {
                     <div className="multiselect-option" tabIndex="0">
                         <input type="checkbox" onChange={handleCheckboxChange}
                             checked={data.checked.includes(item) ? true : false} id={item}/>
-                        <label for={item}>{props.data[item].label}</label>
+                        <label className="body5" for={item}>{props.data[item].label}</label>
                     </div>
                 ) : <span style={{color:"var(--grey3)"}}>{"Таких полей не нашлось :("}</span>}
             </div> : <></>}

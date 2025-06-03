@@ -21,6 +21,13 @@ const fetchEvents = (year, month) => {
         })
   }
 
+  const fetchFilteredEvents = (filters=null) => {
+    return fetch(`${baseUrl}get_events/${filters? "?data=" + encodeURIComponent(JSON.stringify(filters)) : ""}`)
+        .then(response => {
+        return response.json()
+        })
+  }
+
   const fetchHealth = (id) => {
     return fetch(`${baseUrl}student/${id}/health`)
       .then(response => {
@@ -171,8 +178,8 @@ const fetchStudents = (data=null) => {
         })
 }
 
-const createPdf = (data) => {
-  return fetch(`${baseUrl}/generate-pdf/${encodeURIComponent(JSON.stringify(data))}`, {
+const createPdf = (data, group, title, tutor) => {
+  return fetch(`${baseUrl}/generate-pdf/${encodeURIComponent(JSON.stringify(data))}/${group}/${title}/${tutor}`, {
               method: 'GET',
               headers: {
                 'Accept': 'application/pdf',
@@ -181,6 +188,17 @@ const createPdf = (data) => {
               return response.blob()
             })
 }
+
+const createEventsPdf = (data, tutor) => {
+    return fetch(`${baseUrl}/generate-events-pdf/${encodeURIComponent(JSON.stringify(data))}/${tutor}`, {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/pdf',
+                },
+              }).then(response => {
+                return response.blob()
+              })
+  }
 
 const fetchGroups = async (user) => {
     try{
@@ -261,6 +279,7 @@ export {
     putHealth, 
     postEvent, 
     fetchEvents,
+    fetchFilteredEvents,
     fetchMajor,
     fetchTutor,
     fetchStudents,
@@ -271,5 +290,6 @@ export {
     fetchChoice,
     getEmptyInstance,
     createPdf,
+    createEventsPdf,
     updateStudentProfile
 }
